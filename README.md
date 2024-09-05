@@ -1,6 +1,10 @@
 # ubuntu-mirrors-change
 快捷修改ubuntu系统apt使用的镜像源，安装docker-ce。
 
+#使用方法
+
+bash <(curl -Ls https://github.com/qjds/ubuntu-mirrors-change/raw/main/change.sh)
+
 目前已添加的镜像源：
 
 1，中科大

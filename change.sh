@@ -9,13 +9,12 @@ echo -e "\e[32m
 \e[0m"
 
 change-mirror(){
-    mirror=$1
-    echo -e "\e[31m\n确定要更改为？$mirror\n确定输入 y 取消输入 n\n\e[0m"
+    echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n\n\e[0m"
     read -p "输入选项: " yorn
     if [[ "$yorn" = "n" ]]; then
         echo "再见"
     else
-        sed -i "s|http.*ubuntu|$mirror|g" /etc/apt/sources.list
+        sed -i "s|http.*ubuntu|$1|g" /etc/apt/sources.list
         apt update
     fi
 }
@@ -46,6 +45,7 @@ apt install docker-ce -y
 wget https://download.qijds.top/minio.tar 
 docker load < minio.tar
 rm minio.tar
+;;
 
 *)
 echo "输入不正确，程序已退出，请输入选项序号"

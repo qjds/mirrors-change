@@ -3,7 +3,7 @@
 
 #使用方法
 
-bash <(curl -Ls https://github.com/qjds/ubuntu-mirrors-change/raw/main/change.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/qjds/mirrors-change/main/ubuntu.sh)
 
 目前已添加的镜像源：
 

@@ -9,6 +9,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/qjds/mirrors-change/main/ubunt
 
 1，中科大
 2，阿里云
+3，自定义源替换
 
 已添加容器镜像
 

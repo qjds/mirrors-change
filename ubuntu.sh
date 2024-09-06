@@ -87,12 +87,6 @@ network:
             routes:
             -   to: default
                 via: $wg
-        ens192:
-            addresses:
-            - 192.168.10.250/24
-            nameservers:
-                addresses: []
-                search: []
     version: 2
 EOF
 netplan apply

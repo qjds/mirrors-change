@@ -2,7 +2,7 @@
 echo -e "\e[32m
 1.ustc		:切换中科大源并更新索引
 2.aliyun	:切换阿里云源并更新索引 (谨慎选择，目前限速)
-3.input     :自定义源替换
+3.input		:自定义源替换
 4.docker-ce	:使用中科大源安装docker
 5.minio		:docker导入minio镜像到imges
 
@@ -10,14 +10,14 @@ echo -e "\e[32m
 \e[0m"
 
 change-mirror(){
-    echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n\n\e[0m"
-    read -p "输入选项: " yorn
-    if [[ "$yorn" = "n" ]]; then
-        echo "再见"
-    else
-        sed -i "s|http.*ubuntu|$1|g" /etc/apt/sources.list
-        apt update
-    fi
+	echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n\n\e[0m"
+	read -p "输入选项: " yorn
+	if [[ "$yorn" = "n" ]]; then
+		echo "再见"
+	else
+		sed -i "s|http.*ubuntu|$1|g" /etc/apt/sources.list
+		apt update
+	fi
 }
 
 read -p "输入选项：" op

@@ -14,3 +14,6 @@ bash <(curl -Ls https://raw.githubusercontent.com/qjds/mirrors-change/main/ubunt
 已添加容器镜像
 
 1，minio
+2，自定义容器镜像
+
+netplan网络管理器修改dhcp为静态

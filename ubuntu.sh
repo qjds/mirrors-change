@@ -1,5 +1,8 @@
 #!/bin/bash
+clear
+while true; do
 echo -e "\e[32m
+0.exit		:退出本脚本
 1.ustc		:切换中科大源并更新索引
 2.aliyun	:切换阿里云源并更新索引 (谨慎选择，目前限速)
 3.input		:自定义源替换
@@ -10,7 +13,7 @@ echo -e "\e[32m
 \e[0m"
 
 change-mirror(){
-	echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n\n\e[0m"
+	echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n 默认y\n\e[0m"
 	read -p "输入选项: " yorn
 	if [[ "$yorn" = "n" ]]; then
 		echo "再见"
@@ -52,7 +55,35 @@ docker load < minio.tar
 rm minio.tar
 ;;
 
+10)
+echo -e "\e[33m\n选择java版本，可选版本：8 11 17 18 19 21\n\e[0m"
+read -p "java版本：" java
+echo -e "\e[33m\n安装 redis-server ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
+read -p "输入选项：" redis
+apt install -y nginx mysql-server openjdk-${java}-jdk
+if [[ redis = y ]]; then
+	apt install redis-server
+fi
+sed -i "s|127.0.0.1|0.0.0.0|" /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
+while [[ -z "$mydbpass" ]]; do
+	echo -e "\e[31m\n设置mysql root用户密码\n\e[0m"
+	read -p "牢记此密码：" mydbpass
+done
+mysql -uroot << EOF
+CREATE USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '${mydbpass}';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+EOF
+;;
+
+0)
+echo -e "\e[31m已退出\e[0m"
+break
+;;
+
 *)
 echo "输入不正确，程序已退出，请输入选项序号"
 ;;
 esac
+done

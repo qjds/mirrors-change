@@ -70,15 +70,14 @@ load-images "$images"
 
 7)
 wk=$(ip r | grep via | cut -d ' ' -f 5)
-ip=$(ifconfig $wk | grep netmask | awk '$1=$1' | cut -d ' ' -f 2)
-ym=$(ip r | grep $ip | cut -d '/' -f 2 | cut -d ' ' -f 1)
+ip=$(ip a | grep $wk | sed -n "2p" | awk '{print $2}')
 wg=$(ip r | grep via | cut -d ' ' -f 3)
 cat << EOF > /etc/netplan/*cloud-init.yaml
 network:
     ethernets:
         $wk:
             addresses:
-            - $ip/$ym
+            - $ip
             nameservers:
                 addresses:
                 - 223.6.6.6

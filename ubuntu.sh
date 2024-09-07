@@ -11,6 +11,8 @@ echo -e "\e[32m
 6.images	:导入自定义docker镜像
 7.network	:修改netplan配置为静态地址
 
+10.java-mysql-nginx-redis
+
 你目前正在使用的源是$(awk '$1 ~ /^deb/ {print $2}' /etc/apt/sources.list | head -n 1)
 \e[0m"
 
@@ -98,7 +100,7 @@ echo -e "\e[33m\n安装 redis-server ？ \n确定输入 y 取消输入 n 默认n
 read -p "输入选项：" redis
 apt install -y nginx mysql-server openjdk-${java}-jdk
 if [[ redis = y ]]; then
-	apt install redis-server
+	apt install -y redis-server
 fi
 sed -i "s|127.0.0.1|0.0.0.0|" /etc/mysql/mysql.conf.d/mysqld.cnf
 systemctl restart mysql

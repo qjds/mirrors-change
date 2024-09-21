@@ -108,7 +108,7 @@ read -p "java版本：" java
 echo -e "\e[33m\n安装 redis-server ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
 read -p "输入选项：" redis
 apt install -y nginx mysql-server openjdk-${java}-jdk
-if [[ redis = y ]]; then
+if [[ $redis = y ]]; then
 	apt install -y redis-server
 fi
 sed -i "s|127.0.0.1|0.0.0.0|" /etc/mysql/mysql.conf.d/mysqld.cnf

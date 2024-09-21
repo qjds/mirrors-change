@@ -10,6 +10,7 @@ echo -e "\e[32m
 5.minio		:docker导入minio镜像到imges
 6.images	:导入自定义docker镜像
 7.network	:修改netplan配置为静态地址
+8.ssh		:允许root登录
 
 10.java-mysql-nginx-redis
 
@@ -23,6 +24,7 @@ change-mirrors(){
 		echo "再见"
 	else
 		sed -i "s|http.*ubuntu|$1|g" /etc/apt/sources.list
+		sed -i "s|http.*ubuntu|$1|g" /etc/apt/sources.list.d/ubuntu.sources
 		apt update
 	fi
 }
@@ -71,26 +73,33 @@ load-images "$images"
 ;;
 
 7)
-wk=$(ip r | grep via | cut -d ' ' -f 5)
+wk=$(ip r | grep via | sed -n "2p" | cut -d ' ' -f 5)
 ip=$(ip a | grep $wk | sed -n "2p" | awk '{print $2}')
-wg=$(ip r | grep via | cut -d ' ' -f 3)
+wg=$(ip r | grep via | head -n 1 | cut -d ' ' -f 3)
 cat << EOF > /etc/netplan/*cloud-init.yaml
 network:
     ethernets:
         $wk:
+        	dhcp4: false
+        	dhcp6: true
             addresses:
-            - $ip
+            -	$ip
+            -	::1111/64
             nameservers:
-                addresses:
-                - 223.6.6.6
-                search:
-                - dns.alidns.com
-            routes:
-            -   to: default
-                via: $wg
+                addresses: 
+                -	223.5.5.5
+                -	223.6.6.6
+            routes: 
+            -	to: default
+            -	via: $wg
     version: 2
 EOF
 netplan apply
+;;
+
+8)
+sed -i "s|^#\?PermitRootLogin .*|PermitRootLogin yes|" /etc/ssh/sshd_config
+systemctl restart ssh
 ;;
 
 10)

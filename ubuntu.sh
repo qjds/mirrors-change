@@ -84,7 +84,6 @@ network:
         	dhcp6: true
             addresses:
             -	$ip
-            -	::1111/64
             nameservers:
                 addresses: 
                 -	223.5.5.5

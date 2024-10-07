@@ -11,9 +11,15 @@ bash <(curl -Ls https://raw.githubusercontent.com/qjds/mirrors-change/main/ubunt
 2，阿里云
 3，自定义源替换
 
+一键安装docker
+
 已添加容器镜像
 
 1，minio
 2，自定义容器镜像
 
 netplan网络管理器修改dhcp为静态
+
+修改ssh配置允许root登录
+
+常用开发环境安装，java、nginx、redis、mysql

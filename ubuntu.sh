@@ -13,9 +13,10 @@ echo -e "\e[32m0.exit		:退出本脚本
 
 10.java-mysql-nginx-redis\n"
 
-catmirror=$(awk '$1 ~ /^deb/ {print $2}' /etc/apt/sources.list | head -n 1)
+catmirror=$(grep "http" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $2}' | sort | uniq -c )
 
 if command -v cowsay > /dev/null 2>&1; then
+	echo "麻烦牛牛告诉我目前在用的源是什么？使用了几次？"
 	cowsay "你目前正在使用的源是$catmirror"
 else 
 	echo "你目前正在使用的源是$catmirror"
@@ -104,29 +105,56 @@ netplan apply
 
 8)
 sed -i "s|^#\?PermitRootLogin .*|PermitRootLogin yes|" /etc/ssh/sshd_config
-systemctl restart ssh
+systemctl daemon-reload
+systemctl restart ssh*
 ;;
 
 10)
-echo -e "\e[33m\n选择java版本，可选版本：8 11 17 18 19 21\n\e[0m"
-read -p "java版本：" java
 echo -e "\e[33m\n安装 redis-server ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
-read -p "输入选项：" redis
-apt install -y nginx mysql-server openjdk-${java}-jdk
-if [[ $redis = y ]]; then
+read -p "输入选项：" redisyorn
+
+echo -e "\e[33m\n安装 nginx ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
+read -p "输入选项：" nginxyorn
+
+echo -e "\e[33m\n安装 mysql-server ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
+read -p "输入选项：" mysqlyorn
+
+if [[ $mysqlyorn = y ]]; then
+	while [[ -z "$mydbpass" ]]; do
+		echo -e "\e[31m\n设置mysql root用户密码\e[0m"
+		echo -e "\e[33m\n若已执行过本项再次执行会报 CREATE USER failed 忽略即可，新设置的密码依然可以生效\n\e[0m"
+		read -p "牢记此密码：" mydbpass
+	done
+fi
+
+echo -e "\e[33m\n安装 JAVA ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
+read -p "输入选项" javayorn
+
+if [[ $javayorn = y ]]; then
+	echo -e "\e[33m\n选择java版本，可选版本：8 11 17 18 19 21\n\e[0m"
+	read -p "java版本：" java
+	apt install -y openjdk-${java}-jdk
+fi
+
+if [[ $mysqlyorn = y ]]; then
+	apt install -y mysql-server
+	sed -i "s|127.0.0.1|::|" /etc/mysql/mysql.conf.d/mysqld.cnf
+	systemctl restart mysql
+	mysql -uroot << EOF
+	CREATE USER 'root'@'%' IDENTIFIED WITH caching_sha2_password BY '${mydbpass}';
+	ALTER USER 'root'@'%' IDENTIFIED WITH caching_sha2_password BY '${mydbpass}';
+	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+	FLUSH PRIVILEGES;
+EOF
+fi
+
+if [[ $redisyorn = y ]]; then
 	apt install -y redis-server
 fi
-sed -i "s|127.0.0.1|0.0.0.0|" /etc/mysql/mysql.conf.d/mysqld.cnf
-systemctl restart mysql
-while [[ -z "$mydbpass" ]]; do
-	echo -e "\e[31m\n设置mysql root用户密码\n\e[0m"
-	read -p "牢记此密码：" mydbpass
-done
-mysql -uroot << EOF
-CREATE USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '${mydbpass}';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-EOF
+
+if [[ $nginxyorn = y ]]; then
+	apt install -y nginx
+fi
 ;;
 
 0)

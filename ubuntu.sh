@@ -1,8 +1,7 @@
 #!/bin/bash
 clear
 while true; do
-echo -e "\e[32m
-0.exit		:退出本脚本
+echo -e "\e[32m0.exit		:退出本脚本
 1.ustc		:切换中科大源并更新索引
 2.aliyun	:切换阿里云源并更新索引 (谨慎选择，目前限速)
 3.mirrors	:自定义源替换
@@ -12,10 +11,17 @@ echo -e "\e[32m
 7.network	:修改netplan配置为静态地址
 8.ssh		:允许root登录
 
-10.java-mysql-nginx-redis
+10.java-mysql-nginx-redis\n"
 
-你目前正在使用的源是$(awk '$1 ~ /^deb/ {print $2}' /etc/apt/sources.list | head -n 1)
-\e[0m"
+catmirror=$(awk '$1 ~ /^deb/ {print $2}' /etc/apt/sources.list | head -n 1)
+
+if command -v cowsay > /dev/null 2>&1; then
+	cowsay "你目前正在使用的源是$catmirror"
+else 
+	echo "你目前正在使用的源是$catmirror"
+fi
+
+echo -e "\e[0m"
 
 change-mirrors(){
 	echo -e "\e[31m\n确定要更改为？$1\n确定输入 y 取消输入 n 默认y\n\e[0m"
@@ -51,7 +57,7 @@ change-mirrors "https://mirrors.aliyun.com/ubuntu"
 3)
 echo -e "\e[33m输入你要替换的源地址，要确保该地址下有 dists 文件夹\n\e[0m"
 read -p "输入需要替换的源URL：" mirrors
-change-mirror "$mirrors"
+change-mirrors "$mirrors"
 ;;
 
 4)

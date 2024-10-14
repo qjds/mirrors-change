@@ -13,14 +13,10 @@ echo -e "\e[32m0.exit		:退出本脚本
 
 10.java-mysql-nginx-redis\n"
 
-catmirror=$(grep "http" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $2}' | sort | uniq -c )
+catmirror=$(grep -v "^\s*\(#\|$\)\|\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $2}' | sort | uniq -c)
+catmirror1=$(grep "\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $3}' | sort | uniq -c)
 
-if command -v cowsay > /dev/null 2>&1; then
-	echo "麻烦牛牛告诉我目前在用的源是什么？使用了几次？"
-	cowsay "你目前正在使用的源是$catmirror"
-else 
-	echo "你目前正在使用的源是$catmirror"
-fi
+echo -e "你目前正在使用的源是\n$catmirror\n$catmirror1"
 
 echo -e "\e[0m"
 
@@ -95,9 +91,11 @@ network:
                 addresses: 
                 -	223.5.5.5
                 -	223.6.6.6
+                -   2400:3200::1
+                -   2400:3200:baba::1
             routes: 
             -	to: default
-            -	via: $wg
+            	via: $wg
     version: 2
 EOF
 netplan apply

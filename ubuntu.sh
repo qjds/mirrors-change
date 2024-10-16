@@ -79,7 +79,7 @@ load-images "$images"
 wk=$(ip r | grep via | sed -n "2p" | cut -d ' ' -f 5)
 ip=$(ip a | grep $wk | sed -n "2p" | awk '{print $2}')
 wg=$(ip r | grep via | head -n 1 | cut -d ' ' -f 3)
-cat << EOF > /etc/netplan/*cloud-init.yaml
+cat << EOF > $(find /etc/netplan/ -name *.yaml | head -n 1)
 network:
     ethernets:
         $wk:

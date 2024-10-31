@@ -13,8 +13,8 @@ echo -e "\e[32m0.exit       :退出本脚本
 
 10.java-mysql-nginx-redis\n"
 
-catmirror=$(grep -v "^\s*\(#\|$\)\|\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $2}' | sort | uniq -c)
-catmirror1=$(grep "\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $3}' | sort | uniq -c)
+catmirror=$(grep -v -E "^\s*(#|$)|\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $2}' | grep "^http" | sort | uniq -c)
+catmirror1=$(grep  "\[" /etc/apt/sources.list $(find /etc/apt/sources.list.d/ -type f) | awk '{print $3}' | sort | uniq -c)
 
 echo -e "你目前正在使用的源是\n$catmirror\n$catmirror1"
 

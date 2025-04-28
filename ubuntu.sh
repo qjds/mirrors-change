@@ -133,7 +133,7 @@ echo -e "\e[33m\n安装 JAVA ？ \n确定输入 y 取消输入 n 默认n\n\e[0m"
 read -p "输入选项" javayorn
 
 if [[ $javayorn = y ]]; then
-    echo -e "\e[33m\n选择java版本，可选版本：8 11 17 18 19 21\n\e[0m"
+    echo -e "\e[33m\n选择java版本，可选版本：$(apt-cache search openjdk- | grep "^open" |awk -F- '{print $2}'| sort | uniq | tr '\n' ' ')\n\e[0m"
     read -p "java版本：" java
     apt install -y openjdk-${java}-jdk
 fi

@@ -59,7 +59,10 @@ change-mirrors "$mirrors"
 
 4)
 sed -i '/docker-ce/d' /etc/apt/sources.list
-curl -Ls https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | gpg --dearmor --yes -o  /etc/apt/trusted.gpg.d/docker-ce.gpg
+curl -Ls https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | gpg --dearmor --yes -o  /etc/apt/trusted.gpg.d/docker-ce.gpg
+if [[ $? -ne 0 ]]; then
+    curl -Ls https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o  /etc/apt/trusted.gpg.d/docker-ce.gpg
+fi
 echo "deb https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu $(lsb_release -cs) stable" >> /etc/apt/sources.list
 apt update
 apt install docker-ce -y

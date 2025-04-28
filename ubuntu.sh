@@ -125,7 +125,7 @@ if [[ $mysqlyorn = y ]]; then
     while [[ -z "$mydbpass" ]]; do
         echo -e "\e[31m\n设置mysql root用户密码\e[0m"
         echo -e "\e[33m\n若已执行过本项再次执行会报 CREATE USER failed 忽略即可，新设置的密码依然可以生效\n\e[0m"
-        read -p "牢记此密码：" mydbpass
+        read -sp "牢记此密码：" mydbpass
     done
 fi
 

@@ -1,15 +1,16 @@
 #!/bin/bash
 clear
 while true; do
-echo -e "\e[32m0.exit       :退出本脚本
-1.ustc      :切换中科大源并更新索引
-2.aliyun    :切换阿里云源并更新索引 (谨慎选择，目前限速)
-3.mirrors   :自定义源替换
-4.docker-ce :使用中科大源安装docker
-5.minio     :docker导入minio镜像到imges
-6.images    :导入自定义docker镜像
-7.network   :修改netplan配置为静态地址
-8.ssh       :允许root登录
+echo -e "\e[32m
+0.exit           :退出本脚本
+1.ustc           :切换中科大源并更新索引
+2.aliyun         :切换阿里云源并更新索引 (谨慎选择，目前限速)
+3.mirrors        :自定义源替换
+4.docker-ce      :使用中科大源安装docker
+5.docker-mirror  :修改docker默认镜像源
+6.images         :导入自定义docker镜像
+7.network        :修改netplan配置为静态地址
+8.ssh            :允许root登录
 
 10.java-mysql-nginx-redis\n"
 
@@ -69,7 +70,16 @@ apt install docker-ce -y
 ;;
 
 5)
-load-images "https://download.qijds.top/minio.tar"
+if [[ -f /etc/docker/daemon.json ]]; then
+sed -i 's|"registry-mirrors": \["[^"]*"\]|"registry-mirrors": ["https://docker.edudmt.com"]|g' /etc/docker/daemon.json
+else
+tee  /etc/docker/daemon.json <<-'EOF'
+{
+    "registry-mirrors": ["https://docker.edudmt.com"]
+}
+EOF
+fi
+systemctl restart docker
 ;;
 
 6)

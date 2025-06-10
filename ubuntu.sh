@@ -70,6 +70,7 @@ apt install docker-ce -y
 ;;
 
 5)
+apt install -y jq
 if [[ -f /etc/docker/daemon.json ]]; then
 #sed -i 's|"registry-mirrors": \["[^"]*"\]|"registry-mirrors": ["https://docker.edudmt.com"]|g' /etc/docker/daemon.json
 jq '."registry-mirrors" = ["https://docker.edudmt.com"]' /etc/docker/daemon.json | tee /etc/docker/daemon.json

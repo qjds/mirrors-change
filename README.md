@@ -6,6 +6,10 @@
 
 bash <(curl -Ls https://raw.githubusercontent.com/qjds/mirrors-change/main/ubuntu.sh)
 
+bash <(curl -Ls https://shell.qijds.top/ubuntu.sh)
+
+bash <(curl -Ls http://172.16.20.14:9090/qjds/mirrors-change/-/raw/main/ubuntu.sh)
+
 ### 目前已添加的镜像源：
 
 * 中科大

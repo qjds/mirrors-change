@@ -67,6 +67,7 @@ if [[ $? -ne 0 ]]; then
 fi
 echo "deb https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu $(lsb_release -cs) stable" >> /etc/apt/sources.list
 apt update
+apt install -y jq
 jq -n '."registry-mirrors" = ["https://docker.edudmt.com"]' | tee /etc/docker/daemon.json
 apt install docker-ce -y
 ;;

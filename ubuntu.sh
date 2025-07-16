@@ -246,7 +246,6 @@ helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dash
 kubectl -n kubernetes-dashboard get svc | grep kubernetes-dashboard-web
 else
 echo -e "\e[31m\n已取消安装仪表盘\n\e[0m"
-exit
 fi
 ;;
 

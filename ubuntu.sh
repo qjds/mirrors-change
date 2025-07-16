@@ -229,8 +229,15 @@ sed -i "/- name: CALICO_IPV4POOL_IPIP/{n;a\\
 sed -i "/- name: CALICO_IPV4POOL_CIDR/{s/# //;n;s/# //;s/192.168.0.0\/16/10.255.251.0\/24/}" calico.yaml
 sed -i "s/docker.io/docker.edudmt.com/g" calico.yaml
 kubectl apply -f calico.yaml
+echo -e "\e[32m\nCalico网络插件已安装完成，等待节点状态Ready后就可以安装仪表盘了（此脚本选项92，可选）kubectl get node\n\e[0m"
+;;
+
+92)
+#安装仪表盘
+echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888\n\e[0m"
 #bash <(curl -Ls https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3)
-wget https://download.chatyigo.com/helm-3.18.4 -o /usr/local/bin/helm
+wget https://download.chatyigo.com/helm-3.18.4 -O /usr/local/bin/helm
+chmod 755 /usr/local/bin/helm
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --set web.service.type=NodePort
 kubectl -n kubernetes-dashboard get svc | grep kubernetes-dashboard-web

@@ -208,7 +208,11 @@ done < hosts
 echo -e "\e[32m\nKubernetes集群主节点初始化完成，等待从节点加入集群后在主节点安装calico （本脚本91选项）\n\e[0m"
 fi
 if [[ ! $mastip == $ip ]]; then
-cat join-command | bash
+    if [[ -f join-command ]]; then
+        cat join-command | bash
+    else
+        echo -e "\e[31m\n等待主节点初始化完成后执行 cat join-command | bash \n\e[0m"
+    fi
 fi
 ;;
 

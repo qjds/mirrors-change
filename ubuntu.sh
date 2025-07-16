@@ -242,8 +242,12 @@ if [[ $helmyorn != n ]]; then
 wget https://download.chatyigo.com/helm-3.18.4 -O /usr/local/bin/helm
 chmod 755 /usr/local/bin/helm
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --set web.service.type=NodePort
-kubectl -n kubernetes-dashboard get svc | grep kubernetes-dashboard-web
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+kubectl -n kubernetes-dashboard get svc kubernetes-dashboard-kong-proxy -o yaml > dashboard-service.yaml
+sed -i 's/type: ClusterIP/type: NodePort/' dashboard-service.yaml
+sed -i 's/targetPort: 8443/targetPort: 8443\n    nodePort: 30443/' dashboard-service.yaml
+kubectl apply -f dashboard-service.yaml
+echo -e "\e[32m\n等待服务完全启动后执行 kubectl -n kubernetes-dashboard create token kubernetes-dashboard-web 获取登录密钥\n\e[0m"
 else
 echo -e "\e[31m\n已取消安装仪表盘\n\e[0m"
 fi

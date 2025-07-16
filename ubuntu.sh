@@ -234,7 +234,7 @@ echo -e "\e[32m\nCalico网络插件已安装完成，等待节点状态Ready后�
 
 92)
 #安装仪表盘
-echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888\n\e[0m"
+echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888 export no_proxy=172.17.250.0/24\n\e[0m"
 echo -e "\e[33m\n现在继续安装吗 ？ \n确定输入 y 取消输入 n 默认y\n\e[0m"
 read -p "输入选项：" helmyorn
 if [[ $helmyorn != n ]]; then

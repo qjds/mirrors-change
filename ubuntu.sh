@@ -211,6 +211,7 @@ fi
 if [[ ! $mastip == $ip ]]; then
     if [[ -f join-command ]]; then
         cat join-command | bash
+        echo -e "\e[32m\n本节点已加入集群，等待所有节点加入集群后请在主节点安装calico （本脚本91选项）\n\e[0m"
     else
         echo -e "\e[31m\n等待主节点初始化完成后执行 cat join-command | bash \n\e[0m"
     fi

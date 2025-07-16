@@ -235,12 +235,19 @@ echo -e "\e[32m\nCalico网络插件已安装完成，等待节点状态Ready后�
 92)
 #安装仪表盘
 echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888\n\e[0m"
+echo -e "\e[33m\n现在继续安装吗 ？ \n确定输入 y 取消输入 n 默认y\n\e[0m"
+read -p "输入选项：" helmyorn
+if [[ $helmyorn != n ]]; then
 #bash <(curl -Ls https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3)
 wget https://download.chatyigo.com/helm-3.18.4 -O /usr/local/bin/helm
 chmod 755 /usr/local/bin/helm
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --set web.service.type=NodePort
 kubectl -n kubernetes-dashboard get svc | grep kubernetes-dashboard-web
+else
+echo -e "\e[31m\n已取消安装仪表盘\n\e[0m"
+exit
+fi
 ;;
 
 10)

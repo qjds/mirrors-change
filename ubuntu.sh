@@ -157,6 +157,9 @@ fi
 mastip=$(cat hosts | sed -n '1p' | cut -d " " -f 1)
 wk=$(ip r | grep via | cut -d ' ' -f 5)
 ip=$(ip a | grep $wk | sed -n "2p" | awk '{print $2}' | cut -d '/' -f 1)
+if [[ mastip == $ip ]]; then
+    echo -e "\e[32m\n密钥已同步完毕，现在可以在node节点上开始安装了\n\e[0m"
+fi
 sed -ri 's/^([^#].*swap.*)$/#\1/' /etc/fstab  && swapoff -a
 cat >> /etc/sysctl.conf <<EOF
 vm.swappiness = 0

@@ -67,8 +67,6 @@ if [[ $? -ne 0 ]]; then
 fi
 echo "deb https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu $(lsb_release -cs) stable" >> /etc/apt/sources.list
 apt update
-apt install -y jq
-jq -n '."registry-mirrors" = ["https://docker.edudmt.com"]' | tee /etc/docker/daemon.json
 apt install docker-ce -y
 ;;
 
@@ -248,6 +246,7 @@ sed -i 's/type: ClusterIP/type: NodePort/' dashboard-service.yaml
 sed -i 's/targetPort: 8443/targetPort: 8443\n    nodePort: 30443/' dashboard-service.yaml
 kubectl apply -f dashboard-service.yaml
 echo -e "\e[32m\n等待服务完全启动后执行 kubectl -n kubernetes-dashboard create token kubernetes-dashboard-web 获取登录密钥\n\e[0m"
+echo -e "\e[32m\n可选项，授予web全权限：kubectl create clusterrolebinding dashboard-crd-access --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:kubernetes-dashboard-web\n\e[0m"
 else
 echo -e "\e[31m\n已取消安装仪表盘\n\e[0m"
 fi

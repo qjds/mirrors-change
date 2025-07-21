@@ -235,24 +235,40 @@ echo -e "\e[32m\nCalico网络插件已安装完成，等待节点状态Ready后�
 
 92)
 #安装仪表盘
-echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888 export no_proxy=172.17.250.0/24\n\e[0m"
-echo -e "\e[33m\n现在继续安装吗 ？ \n确定输入 y 取消输入 n 默认y\n\e[0m"
-read -p "输入选项：" helmyorn
-if [[ $helmyorn != n ]]; then
+#echo -e "\e[31m\n此选项建议设置代理后再继续，设置方法 export https_proxy=http://example.com:8888&&export no_proxy=172.17.250.0/24\n\e[0m"
+#echo -e "\e[33m\n现在继续安装吗 ？ \n确定输入 y 取消输入 n 默认y\n\e[0m"
+#read -p "输入选项：" helmyorn
+#if [[ $helmyorn != n ]]; then
+#export no_proxy=download.chatyigo.com,$no_proxy
+if ! command -v helm &> /dev/null; then
 #bash <(curl -Ls https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3)
 wget https://download.chatyigo.com/helm-3.18.4 -O /usr/local/bin/helm
+if [[ $? -ne 0 ]]; then
+rm -f /usr/local/bin/helm
+echo -e "\e[31m\n下载helm失败，请检查网络连接或手动下载，手动下载需赋予执行权限\n\e[0m"
+echo -e "\e[31m\n手动下载链接 https://download.chatyigo.com/helm-3.18.4 存放位置 /usr/local/bin/helm \n\e[0m"
+exit 1
+fi
 chmod 755 /usr/local/bin/helm
+else
+echo -e "\e[32m\n已安装helm，跳过安装\n\e[0m"
+fi
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+if jq 'has(".registry-mirrors")' /etc/docker/daemon.json &> /dev/null; then
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+else
+echo -e "\e[31m\n请先设置docker镜像源\n\e[0m"
+break
+fi
 kubectl -n kubernetes-dashboard get svc kubernetes-dashboard-kong-proxy -o yaml > dashboard-service.yaml
 sed -i 's/type: ClusterIP/type: NodePort/' dashboard-service.yaml
 sed -i 's/targetPort: 8443/targetPort: 8443\n    nodePort: 30443/' dashboard-service.yaml
 kubectl apply -f dashboard-service.yaml
 echo -e "\e[32m\n等待服务完全启动后执行 kubectl -n kubernetes-dashboard create token kubernetes-dashboard-web 获取登录密钥\n\e[0m"
 echo -e "\e[32m\n可选项，授予web全权限：kubectl create clusterrolebinding dashboard-crd-access --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:kubernetes-dashboard-web\n\e[0m"
-else
+#else
 echo -e "\e[31m\n已取消安装仪表盘\n\e[0m"
-fi
+#fi
 ;;
 
 10)
